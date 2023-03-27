@@ -18,7 +18,7 @@ namespace AppFn
             ILogger log)
 
         {
-            log.LogInformation("Hello World!");
+            log.LogInformation("Hello World!!!");
             log.LogInformation("C# HTTP trigger function processed a request.");
 
             string name = req.Query["name"];
