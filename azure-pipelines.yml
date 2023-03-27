@@ -38,8 +38,11 @@ stages:
           $(workingDirectory)/*.csproj
         arguments: --output $(System.DefaultWorkingDirectory)/publish_output --configuration Release
 
-    - task: PublishBuildArtifacts@1
+    - task: ArchiveFiles@2
+      displayName: 'Archive files'
       inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+        rootFolderOrFile: '$(System.DefaultWorkingDirectory)/publish_output'
+        includeRootFolder: false
+        archiveType: zip
+        archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+        replaceExistingArchive: true
