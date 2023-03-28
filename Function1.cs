@@ -1,7 +1,5 @@
 using System;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace AppFn
@@ -20,6 +18,7 @@ namespace AppFn
         {
             _logger.LogInformation($"C# ServiceBus topic trigger function processed message: {mySbMsg}");
             Console.WriteLine($"C# ServiceBus topic trigger function processed message: {mySbMsg}");
+
         }
     }
 }
