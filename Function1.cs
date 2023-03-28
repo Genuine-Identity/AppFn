@@ -1,37 +1,25 @@
 using System;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace AppFn
 {
-    public static class Function1
+    public class Function1
     {
-        [FunctionName("Function1")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
-            ILogger log)
+        private readonly ILogger<Function1> _logger;
 
+        public Function1(ILogger<Function1> log)
         {
-            log.LogInformation("Hello World!!!");
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            _logger = log;
+        }
 
-            string name = req.Query["name"];
-
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "Hello World!!!This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully!!!";
-
-            return new OkObjectResult(responseMessage);
+        [FunctionName("Function1")]
+        public void Run([ServiceBusTrigger("topic1", "subs1", Connection = "ConnectionStrings")] string mySbMsg)
+        {
+            _logger.LogInformation($"C# ServiceBus topic trigger function processed message: {mySbMsg}");
+            Console.WriteLine($"C# ServiceBus topic trigger function processed message: {mySbMsg}");
         }
     }
 }
